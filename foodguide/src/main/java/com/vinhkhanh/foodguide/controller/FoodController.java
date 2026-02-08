@@ -23,7 +23,7 @@ public class FoodController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FoodDTO> getFoodById(@PathVariable Long id) {
+    public ResponseEntity<FoodDTO> getFoodById(@PathVariable("id") Long id) {
         try {
             FoodDTO food = foodService.getFoodById(id);
             return ResponseEntity.ok(food);
@@ -33,7 +33,7 @@ public class FoodController {
     }
 
     @GetMapping("/location/{locationId}")
-    public ResponseEntity<List<FoodDTO>> getFoodsByLocation(@PathVariable Long locationId) {
+    public ResponseEntity<List<FoodDTO>> getFoodsByLocation(@PathVariable("locationId") Long locationId) {
         return ResponseEntity.ok(foodService.getFoodsByLocation(locationId));
     }
 
@@ -49,7 +49,7 @@ public class FoodController {
 
     @PutMapping("/{id}")
     public ResponseEntity<FoodDTO> updateFood(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @Valid @RequestBody FoodRequest request) {
         try {
             FoodDTO food = foodService.updateFood(id, request);
@@ -60,7 +60,7 @@ public class FoodController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFood(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteFood(@PathVariable("id") Long id) {
         try {
             foodService.deleteFood(id);
             return ResponseEntity.noContent().build();

@@ -25,7 +25,7 @@ public class QRScanController {
     }
 
     @GetMapping("/count/{qrId}")
-    public ResponseEntity<Long> getScanCount(@PathVariable Long qrId) {
+    public ResponseEntity<Long> getScanCount(@PathVariable("qrId") Long qrId) {
         Long count = qrScanLogService.getScanCountByQRCode(qrId);
         return ResponseEntity.ok(count);
     }

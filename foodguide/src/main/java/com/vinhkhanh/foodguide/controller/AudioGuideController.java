@@ -23,7 +23,7 @@ public class AudioGuideController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AudioGuideDTO> getAudioGuideById(@PathVariable Long id) {
+    public ResponseEntity<AudioGuideDTO> getAudioGuideById(@PathVariable("id") Long id) {
         try {
             AudioGuideDTO audioGuide = audioGuideService.getAudioGuideById(id);
             return ResponseEntity.ok(audioGuide);
@@ -33,14 +33,14 @@ public class AudioGuideController {
     }
 
     @GetMapping("/location/{locationId}")
-    public ResponseEntity<List<AudioGuideDTO>> getAudioGuidesByLocation(@PathVariable Long locationId) {
+    public ResponseEntity<List<AudioGuideDTO>> getAudioGuidesByLocation(@PathVariable("locationId") Long locationId) {
         return ResponseEntity.ok(audioGuideService.getAudioGuidesByLocation(locationId));
     }
 
     @GetMapping("/location/{locationId}/language/{language}")
     public ResponseEntity<AudioGuideDTO> getAudioGuideByLocationAndLanguage(
-            @PathVariable Long locationId,
-            @PathVariable String language) {
+            @PathVariable("locationId") Long locationId,
+            @PathVariable("language") String language) {
         try {
             AudioGuideDTO audioGuide = audioGuideService.getAudioGuideByLocationAndLanguage(locationId, language);
             return ResponseEntity.ok(audioGuide);
@@ -50,7 +50,7 @@ public class AudioGuideController {
     }
 
     @GetMapping("/language/{language}")
-    public ResponseEntity<List<AudioGuideDTO>> getAudioGuidesByLanguage(@PathVariable String language) {
+    public ResponseEntity<List<AudioGuideDTO>> getAudioGuidesByLanguage(@PathVariable("language") String language) {
         return ResponseEntity.ok(audioGuideService.getAudioGuidesByLanguage(language));
     }
 
@@ -66,7 +66,7 @@ public class AudioGuideController {
 
     @PutMapping("/{id}")
     public ResponseEntity<AudioGuideDTO> updateAudioGuide(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @Valid @RequestBody AudioGuideRequest request) {
         try {
             AudioGuideDTO audioGuide = audioGuideService.updateAudioGuide(id, request);
@@ -77,7 +77,7 @@ public class AudioGuideController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAudioGuide(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteAudioGuide(@PathVariable("id") Long id) {
         try {
             audioGuideService.deleteAudioGuide(id);
             return ResponseEntity.noContent().build();

@@ -29,7 +29,7 @@ public class LocationController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<LocationDetailDTO> getLocationById(@PathVariable Long id) {
+    public ResponseEntity<LocationDetailDTO> getLocationById(@PathVariable("id") Long id) {
         try {
             LocationDetailDTO location = locationService.getLocationById(id);
             return ResponseEntity.ok(location);
@@ -39,7 +39,7 @@ public class LocationController {
     }
 
     @GetMapping("/qr/{qrValue}")
-    public ResponseEntity<LocationDetailDTO> getLocationByQRCode(@PathVariable String qrValue) {
+    public ResponseEntity<LocationDetailDTO> getLocationByQRCode(@PathVariable("qrValue") String qrValue) {
         try {
             LocationDetailDTO location = locationService.getLocationByQRCode(qrValue);
             return ResponseEntity.ok(location);
@@ -63,7 +63,7 @@ public class LocationController {
 
     @PutMapping("/{id}")
     public ResponseEntity<LocationDTO> updateLocation(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @Valid @RequestBody LocationRequest request) {
         try {
             LocationDTO location = locationService.updateLocation(id, request);
@@ -74,7 +74,7 @@ public class LocationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteLocation(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteLocation(@PathVariable("id") Long id) {
         try {
             locationService.deleteLocation(id);
             return ResponseEntity.noContent().build();
@@ -84,7 +84,7 @@ public class LocationController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<LocationDTO>> getLocationsByUser(@PathVariable Long userId) {
+    public ResponseEntity<List<LocationDTO>> getLocationsByUser(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok(locationService.getLocationsByUser(userId));
     }
 

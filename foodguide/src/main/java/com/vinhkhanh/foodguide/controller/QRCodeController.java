@@ -23,7 +23,7 @@ public class QRCodeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<QRCodeDTO> getQRCodeById(@PathVariable Long id) {
+    public ResponseEntity<QRCodeDTO> getQRCodeById(@PathVariable("id") Long id) {
         try {
             QRCodeDTO qrCode = qrCodeService.getQRCodeById(id);
             return ResponseEntity.ok(qrCode);
@@ -33,7 +33,7 @@ public class QRCodeController {
     }
 
     @GetMapping("/value/{qrValue}")
-    public ResponseEntity<QRCodeDTO> getQRCodeByValue(@PathVariable String qrValue) {
+    public ResponseEntity<QRCodeDTO> getQRCodeByValue(@PathVariable("qrValue") String qrValue) {
         try {
             QRCodeDTO qrCode = qrCodeService.getQRCodeByValue(qrValue);
             return ResponseEntity.ok(qrCode);
@@ -54,7 +54,7 @@ public class QRCodeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<QRCodeDTO> updateQRCode(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @Valid @RequestBody QRCodeRequest request) {
         try {
             QRCodeDTO qrCode = qrCodeService.updateQRCode(id, request);
@@ -65,7 +65,7 @@ public class QRCodeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteQRCode(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteQRCode(@PathVariable("id") Long id) {
         try {
             qrCodeService.deleteQRCode(id);
             return ResponseEntity.noContent().build();

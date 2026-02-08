@@ -26,11 +26,11 @@ const getApiBaseUrl = (): string => {
   if (typeof window !== 'undefined') {
     // In Vite, we can access env variables through global
     // But to avoid import.meta issues in React Native, we use process.env fallback
-    return 'http://localhost:8080/api';
+    return 'http://localhost:8088/api';
   }
   
   // Default fallback
-  return 'http://localhost:8080/api';
+  return 'http://localhost:8088/api';
 };
 
 const API_BASE_URL = getApiBaseUrl();
