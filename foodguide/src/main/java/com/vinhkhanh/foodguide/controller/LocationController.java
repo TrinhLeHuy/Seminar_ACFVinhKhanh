@@ -28,6 +28,16 @@ public class LocationController {
         return ResponseEntity.ok(locationService.getAllLocations());
     }
 
+    // ========== SEARCH ENDPOINT ==========
+    // GET /api/locations/search?keyword=phở
+    // @RequestParam = lấy giá trị từ query string (?keyword=...)
+    // required = false = không bắt buộc phải có
+    @GetMapping("/search")
+    public ResponseEntity<List<LocationDTO>> searchLocations(
+            @RequestParam(value = "keyword", required = false) String keyword) {
+        return ResponseEntity.ok(locationService.searchLocations(keyword));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<LocationDetailDTO> getLocationById(@PathVariable("id") Long id) {
         try {

@@ -121,6 +121,17 @@ export const locationApi = {
     return apiRequest<LocationDetail>(`/locations/qr/${qrValue}`);
   },
 
+  // ========== SEARCH API ==========
+  // Gọi BE endpoint: GET /api/locations/search?keyword=...
+  search: async (keyword: string): Promise<Location[]> => {
+    // Nếu keyword rỗng, lấy tất cả
+    if (!keyword || keyword.trim() === '') {
+      return apiRequest<Location[]>('/locations');
+    }
+    // Encode keyword để xử lý tiếng Việt
+    return apiRequest<Location[]>(`/locations/search?keyword=${encodeURIComponent(keyword)}`);
+  },
+
   create: async (data: LocationRequest): Promise<Location> => {
     return apiRequest<Location>('/locations', {
       method: 'POST',

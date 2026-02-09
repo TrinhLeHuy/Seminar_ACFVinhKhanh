@@ -86,6 +86,16 @@ public class LocationService {
                 .collect(Collectors.toList());
     }
 
+    // ========== SEARCH METHOD ==========
+    public List<LocationDTO> searchLocations(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return getAllLocations();
+        }
+        return locationRepository.searchByKeyword(keyword.trim()).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
     private LocationDTO convertToDTO(Location location) {
         LocationDTO dto = new LocationDTO();
         dto.setLocationId(location.getLocationId());

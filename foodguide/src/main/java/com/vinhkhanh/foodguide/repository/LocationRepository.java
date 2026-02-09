@@ -18,4 +18,9 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
                                        @Param("maxLat") Double maxLat,
                                        @Param("minLng") Double minLng, 
                                        @Param("maxLng") Double maxLng);
+    
+    // ========== SEARCH METHOD ==========
+    @Query("SELECT l FROM Location l WHERE LOWER(l.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+           "OR LOWER(l.description) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    List<Location> searchByKeyword(@Param("keyword") String keyword);
 }

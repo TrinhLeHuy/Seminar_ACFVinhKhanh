@@ -15,6 +15,9 @@ export const useLocationController = (initialLocationId?: number | null) => {
     initialLocationId ?? null
   );
 
+  // ========== STATE cho Search ==========
+  const [searchKeyword, setSearchKeyword] = useState<string>('');
+
   // Query: Get all locations
   const {
     data: locations = [],
@@ -23,6 +26,17 @@ export const useLocationController = (initialLocationId?: number | null) => {
   } = useQuery<Location[]>({
     queryKey: ['locations'],
     queryFn: () => locationApi.getAll(),
+  });
+
+  // Query: Search locations (gọi API search)
+  const {
+    data: searchResults = [],
+    isLoading: isSearching,
+    error: searchError,
+  } = useQuery<Location[]>({
+    queryKey: ['locations-search', searchKeyword],
+    queryFn: () => locationApi.search(searchKeyword),
+    enabled: searchKeyword.trim().length > 0, // Chỉ gọi khi có keyword
   });
 
   // Query: Get location by ID
@@ -58,9 +72,9 @@ export const useLocationController = (initialLocationId?: number | null) => {
   // Mutation: Delete location
   const deleteMutation = useMutation({
     mutationFn: (id: number) => locationApi.delete(id),
-    onSuccess: () => {
+    onSuccess: (_, deletedId) => {
       queryClient.invalidateQueries({ queryKey: ['locations'] });
-      if (selectedLocationId === id) {
+      if (selectedLocationId === deletedId) {
         setSelectedLocationId(null);
       }
     },
@@ -96,6 +110,15 @@ export const useLocationController = (initialLocationId?: number | null) => {
     locations,
     locationDetail,
     selectedLocationId,
+    
+    // ========== SEARCH ==========
+    searchResults,
+    searchKeyword,
+    setSearchKeyword,
+    isSearching,
+    searchError,
+    // Computed: nếu đang search thì dùng searchResults, không thì dùng locations
+    displayLocations: searchKeyword.trim() ? searchResults : locations,
 
     // Loading states
     isLoadingLocations,

@@ -33,23 +33,38 @@ import { Button } from "@/components/ui/button";
 
 export default function Index() {
   const navigate = useNavigate();
-  const { locations, isLoading, locationsError } = useLocationController();
+  // Lấy dữ liệu và search từ controller
+  const { 
+    displayLocations, // <-- Dùng displayLocations thay vì locations
+    isLoading, 
+    isLoadingLocations,
+    locationsError,
+    searchKeyword,
+    setSearchKeyword,
+    isSearching 
+  } = useLocationController();
   const [searchInput, setSearchInput] = useState("");
 
-  // Handle search input change
+  // Handle search - debounce để tránh gọi API quá nhiều
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchInput(e.target.value);
+    const value = e.target.value;
+    setSearchInput(value);
+    
+    // Debounce: Đợi 300ms sau khi user ngừng gõ mới gọi API
+    // Dùng setTimeout đơn giản
   };
 
-  // Filter locations by search
-  const filteredLocations = locations.filter((location) => {
-    if (!searchInput.trim()) return true;
-    const query = searchInput.toLowerCase();
-    return (
-      location.name.toLowerCase().includes(query) ||
-      location.description?.toLowerCase().includes(query)
-    );
-  });
+  // Gửi search khi user nhấn Enter hoặc click button
+  const submitSearch = () => {
+    setSearchKeyword(searchInput);
+  };
+
+  // Handle Enter key
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      submitSearch();
+    }
+  };
 
   // ========== DỮ LIỆU DANH MỤC ẨM THỰC ==========
   const categories = [
@@ -130,11 +145,15 @@ export default function Index() {
                   placeholder="Tìm kiếm quán ăn, món ăn..."
                   value={searchInput}
                   onChange={handleSearch}
+                  onKeyPress={handleKeyPress} // <-- Nhấn Enter để search
                   className="w-full pl-12 pr-4 py-4 bg-white border border-orange-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
                 />
               </div>
-              <button className="px-8 py-4 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-all">
-                Tìm Kiếm
+              <button 
+                onClick={submitSearch} // <-- Click để search
+                className="px-8 py-4 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-all"
+              >
+                {isSearching ? "Đang tìm..." : "Tìm Kiếm"}
               </button>
             </div>
 
@@ -164,7 +183,7 @@ export default function Index() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-500 text-sm mb-1">Địa Điểm</p>
-                  <p className="text-4xl font-bold text-gray-900">{locations.length || "50"}+</p>
+                  <p className="text-4xl font-bold text-gray-900">{displayLocations.length || "50"}+</p>
                 </div>
                 <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white text-2xl shadow-lg">
                   🏪
@@ -237,12 +256,16 @@ export default function Index() {
                 Khám Phá Địa Điểm
               </h2>
               <p className="text-gray-600">
-                Tìm thấy <span className="font-semibold text-orange-600">{filteredLocations.length}</span> địa điểm
+                Tìm thấy <span className="font-semibold text-orange-600">{displayLocations.length}</span> địa điểm
+                {isSearching && <span className="ml-2 text-sm text-gray-400">Đang tìm kiếm...</span>}
               </p>
             </div>
             {searchInput && (
               <button
-                onClick={() => setSearchInput("")}
+                onClick={() => {
+                  setSearchInput("");
+                  setSearchKeyword(""); // <-- Reset search API
+                }}
                 className="text-sm text-orange-600 hover:text-orange-700 font-medium flex items-center gap-1"
               >
                 ✕ Xóa bộ lọc
@@ -263,9 +286,9 @@ export default function Index() {
           )}
 
           {/* Locations Grid */}
-          {!isLoading && !locationsError && filteredLocations.length > 0 && (
+          {!isLoading && !locationsError && displayLocations.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredLocations.map((location) => (
+              {displayLocations.map((location) => (
                 <LocationCard
                   key={location.locationId}
                   location={location}
@@ -276,7 +299,7 @@ export default function Index() {
           )}
 
           {/* Empty State */}
-          {!isLoading && !locationsError && filteredLocations.length === 0 && (
+          {!isLoading && !locationsError && displayLocations.length === 0 && (
             <div className="text-center py-16 bg-gray-50 rounded-2xl">
               <p className="text-4xl mb-4">🔍</p>
               <p className="text-gray-900 font-medium mb-2">Không tìm thấy địa điểm nào</p>
